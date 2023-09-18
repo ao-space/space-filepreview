@@ -35,8 +35,8 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime; \
 RUN apt-get update && apt-get install --no-install-recommends \
         apt-transport-https ca-certificates poppler-utils qpdf \
         libfile-mimeinfo-perl libimage-exiftool-perl ghostscript \
-        libsecret-1-0 zlib1g-dev libjpeg-dev ffmpeg libmagic1 \
-        libmagickwand-dev imagemagick -y && rm -rf /var/lib/apt/lists/*
+        libsecret-1-0 zlib1g-dev libjpeg-dev ffmpeg -y \
+        && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/eulixspace-filepreview
 
