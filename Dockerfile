@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.9.9-slim
+FROM debian:experimental
 
 ENV LANG C.UTF-8
 
@@ -25,6 +25,7 @@ RUN set -eux; \
 		ca-certificates \
 		netbase \
 		tzdata \
+                gcc g++ python3 python3-pip python3-full python3-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*
 RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime; \
@@ -34,13 +35,13 @@ RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime; \
 RUN apt-get update && apt-get install --no-install-recommends \
         apt-transport-https ca-certificates poppler-utils qpdf \
         libfile-mimeinfo-perl libimage-exiftool-perl ghostscript \
-        libsecret-1-0 zlib1g-dev libjpeg-dev ffmpeg libmagic1 python3-magic \
+        libsecret-1-0 zlib1g-dev libjpeg-dev ffmpeg libmagic1 \
         libmagickwand-dev imagemagick -y && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/eulixspace-filepreview
 
 COPY . /opt/eulixspace-filepreview
 
-RUN pip install -r /opt/eulixspace-filepreview/requirements.txt
+RUN pip3 install -r /opt/eulixspace-filepreview/requirements.txt --break-system-packages
 
-ENTRYPOINT ["python","main.py"]
+ENTRYPOINT ["python3","main.py"]
