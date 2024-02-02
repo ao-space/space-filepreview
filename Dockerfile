@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.9.9-slim
+FROM debian:experimental
 
 ENV LANG C.UTF-8
 
@@ -20,27 +20,31 @@ ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive
 
 RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		ca-certificates \
-		netbase \
-		tzdata \
-	; \
-	rm -rf /var/lib/apt/lists/*
+        apt-get update; \
+        apt-get install -y --no-install-recommends \
+                ca-certificates \
+                netbase \
+                tzdata \
+        ; \
+        rm -rf /var/lib/apt/lists/*
 RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime; \
         echo ${TZ} > /etc/timezone; \
         dpkg-reconfigure --frontend noninteractive tzdata; \
         rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install --no-install-recommends \
         apt-transport-https ca-certificates poppler-utils qpdf \
-        libfile-mimeinfo-perl libimage-exiftool-perl ghostscript \
+        libfile-mimeinfo-perl libimage-exiftool-perl ghostscript  python3-pip\
         libsecret-1-0 zlib1g-dev libjpeg-dev ffmpeg libmagic1 python3-magic \
-        libmagickwand-dev imagemagick -y && rm -rf /var/lib/apt/lists/*
+        libmagickwand-dev imagemagick pipx libffi-dev libjpeg-dev \
+        build-essential python3.11-venv python3-dev -y \
+        && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/eulixspace-filepreview
 
 COPY . /opt/eulixspace-filepreview
 
-RUN pip install -r /opt/eulixspace-filepreview/requirements.txt
+RUN python3 -m venv myenv && . myenv/bin/activate\
+    &&pip install -r /opt/eulixspace-filepreview/requirements.txt
 
-ENTRYPOINT ["python","main.py"]
+
+ENTRYPOINT ["python3","main.py"]
