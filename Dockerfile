@@ -20,13 +20,13 @@ ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive
 
 RUN set -eux; \
-        apt-get update; \
-        apt-get install -y --no-install-recommends \
-                ca-certificates \
-                netbase \
-                tzdata \
-        ; \
-        rm -rf /var/lib/apt/lists/*
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		ca-certificates \
+		netbase \
+		tzdata \
+	; \
+	rm -rf /var/lib/apt/lists/*
 RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime; \
         echo ${TZ} > /etc/timezone; \
         dpkg-reconfigure --frontend noninteractive tzdata; \
